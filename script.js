@@ -100,3 +100,13 @@ btnNew.addEventListener('click', function () {
 
 // const firstName = 'Jonas';
 // calcAge(1991);
+document
+  .getElementById('Next-page-calculator')
+  .addEventListener('click', function () {
+    const page = document.getElementById('page');
+    page.classList.add('side-left');
+
+    setTimeout(() => {
+      window.location.href = 'cal.html';
+    }, 500);
+  });

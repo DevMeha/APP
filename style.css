@@ -168,3 +168,33 @@ main {
 .hidden {
   display: none;
 }
+
+.btn-calculator-div {
+  position: absolute;
+  top: 5rem;
+  right: 10rem;
+}
+.btn-calculator {
+  background-color: white;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: none;
+  border-radius: 5rem;
+  padding: 10px;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.356);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-calculator:hover {
+  transform: scale(1.05);
+}
+.btn-calculator:active {
+  transform: translateY(5px);
+}
+#page {
+  transition: transform 0.5s ease-in-out;
+  will-change: transform;
+}
+
+.side-left {
+  transform: translateX(-100%);
+}
