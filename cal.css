@@ -9,3 +9,17 @@ body {
   justify-content: center;
   overflow: hidden;
 }
+#back {
+  height: 10rem;
+  width: 10rem;
+  cursor: pointer;
+}
+
+#page {
+  transition: transform 0.5s ease-in-out;
+  will-change: transform;
+}
+
+.side-left {
+  transform: translateX(-100%);
+}
