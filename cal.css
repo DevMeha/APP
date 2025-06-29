@@ -1,3 +1,7 @@
+.main {
+  position: absolute;
+}
+
 body {
   font-family: 'Nunito', sans-serif;
   font-weight: 400;
@@ -8,6 +12,7 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  position: relative;
 }
 #back {
 }
@@ -31,13 +36,15 @@ body {
   text-align: center;
 }
 .btn-div {
-  border: solid black 3px;
+  border: solid black 2px;
 }
 .input-text {
   background-color: transparent;
   width: 20rem;
   height: 5rem;
-  mar
+  margin: 10px 10px;
+  font-size: 5rem;
+  text-align: right;
 }
 .btn-calc {
   display: grid;
@@ -53,4 +60,29 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.btn-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10rem;
+  height: 5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  background-color: white;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: none;
+  box-shadow: 0 2rem 5rem 10px rgba(0, 0, 0, 0.356);
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  transform: scale(1.05);
+}
+.btn-back:active {
+  transform: translateY(5px);
+}
+
+.main {
 }
