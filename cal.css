@@ -34,6 +34,8 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
+  background-color: rgb(6, 173, 173);
+  border: none;
 }
 .btn-div {
   border: solid black 2px;
@@ -49,11 +51,12 @@ body {
 .btn-calc {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr; /* 3 kolumny */
-  gap: 1px;
+  gap: 10px;
   margin: 0 5px;
   justify-content: center;
   align-items: center;
   justify-items: center;
+  margin-bottom: 5px;
 }
 .text-div {
   margin-top: 20px;
