@@ -10,9 +10,6 @@ body {
   overflow: hidden;
 }
 #back {
-  height: 10rem;
-  width: 10rem;
-  cursor: pointer;
 }
 
 #page {
@@ -22,4 +19,38 @@ body {
 
 .side-left {
   transform: translateX(100%);
+}
+.Button-class {
+  height: 5rem;
+  width: 5rem;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.btn-div {
+  border: solid black 3px;
+}
+.input-text {
+  background-color: transparent;
+  width: 20rem;
+  height: 5rem;
+  mar
+}
+.btn-calc {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* 3 kolumny */
+  gap: 1px;
+  margin: 0 5px;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+}
+.text-div {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
