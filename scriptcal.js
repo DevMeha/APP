@@ -33,3 +33,11 @@ clear.addEventListener('click', function () {
   previousoperand = '';
   operationLogic = '';
 });
+const operationConst = operation.forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    previousoperand = currentOperand;
+    operationLogic = this.textContent;
+    currentOperand = '';
+    inputText.textContent = '';
+  });
+});
