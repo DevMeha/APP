@@ -18,6 +18,7 @@ const clear = document.querySelector('.clear');
 let previousoperand = '';
 let currentOperand = '';
 let operationLogic = '';
+let result = '';
 
 number.forEach(function (btn) {
   btn.addEventListener('click', function () {
@@ -39,5 +40,14 @@ const operationConst = operation.forEach(function (btn) {
     operationLogic = this.textContent;
     currentOperand = '';
     inputText.textContent = '';
+  });
+});
+
+equal.forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    if (operationLogic === '+') {
+      result = parseFloat(previousoperand) + parseFloat(currentOperand);
+    }
+    inputText.textContent = result;
   });
 });
