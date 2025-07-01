@@ -14,6 +14,7 @@ const operation = document.querySelectorAll('.operation');
 const equal = document.querySelectorAll('.equal');
 const inputText = document.querySelector('.input-text');
 const clear = document.querySelector('.clear');
+const del = document.querySelector('.del');
 
 let previousoperand = '';
 let currentOperand = '';
@@ -47,7 +48,24 @@ equal.forEach(function (btn) {
   btn.addEventListener('click', function () {
     if (operationLogic === '+') {
       result = parseFloat(previousoperand) + parseFloat(currentOperand);
+      inputText.textContent = result;
+    } else if (operationLogic === '-') {
+      result = parseFloat(previousoperand) - parseFloat(currentOperand);
+      inputText.textContent = result;
+    } else if (operationLogic === '*') {
+      result = parseFloat(previousoperand) * parseFloat(currentOperand);
+      inputText.textContent = result;
+    } else if (operationLogic === '/') {
+      result = parseFloat(previousoperand) / parseFloat(currentOperand);
+      inputText.textContent = result;
+    } else if (operationLogic === '/') {
+      if (parseFloat(currentOperand) === 0)
+        inputText.textContent = 'you cannot divide by zero';
     }
-    inputText.textContent = result;
   });
+});
+
+del.addEventListener('click', function () {
+  currentOperand = currentOperand.slice(0, -1);
+  inputText.textContent = currentOperand;
 });
