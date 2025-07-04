@@ -6,7 +6,7 @@
 }
 
 body {
-  font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
   font-weight: 400;
   height: 100vh;
   color: #333;
@@ -20,6 +20,10 @@ body {
 #page {
   transition: transform 0.5s ease-in-out;
   will-change: transform;
+}
+
+.side-right {
+  transform: translateX(-100%);
 }
 
 .side-left {

@@ -1,13 +1,4 @@
-document.getElementById("back").addEventListener("click", function () {
-  const page = document.getElementById("page");
-  if (page) {
-    page.classList.add("side-left");
-  }
-
-  setTimeout(() => {
-    window.location.href = "../pin/index.html";
-  }, 500);
-});
+// Stary kod usunięty - teraz używamy DOMContentLoaded
 
 const number = document.querySelectorAll(".number");
 const operation = document.querySelectorAll(".operation");
@@ -71,6 +62,32 @@ del.addEventListener("click", function () {
   inputText.textContent = currentOperand;
 });
 
-next.addEventListener("click", function () {
-  window.location.href = "../ind/ind.html";
+document.addEventListener("DOMContentLoaded", function () {
+  // Przycisk BACK
+  const btnBack = document.getElementById("back");
+  if (btnBack) {
+    btnBack.addEventListener("click", function () {
+      const page = document.getElementById("page");
+      if (page) {
+        page.classList.add("side-left");
+      }
+      setTimeout(() => {
+        window.location.href = "../pin/index.html";
+      }, 500);
+    });
+  }
+
+  // Przycisk NEXT
+  const btnNext = document.getElementById("next");
+  if (btnNext) {
+    btnNext.addEventListener("click", function () {
+      const page = document.getElementById("page");
+      if (page) {
+        page.classList.add("side-right");
+      }
+      setTimeout(() => {
+        window.location.href = "../ind/ind.html";
+      }, 500);
+    });
+  }
 });

@@ -3,3 +3,11 @@ body {
   height: 100vh;
   overflow: hidden;
 }
+.move {
+  transform: translateX(100%);
+}
+
+#page {
+  transition: transform 0.5s ease-in-out;
+  will-change: transform;
+}
