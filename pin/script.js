@@ -107,6 +107,6 @@ document
     page.classList.add('side-left');
 
     setTimeout(() => {
-      window.location.href = 'cal.html';
+      window.location.href = '../CAL/cal.html';
     }, 500);
   });
