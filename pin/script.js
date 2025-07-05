@@ -9,6 +9,7 @@ const diceEl = document.querySelector('.dice');
 const btnNew = document.querySelector('.btn--new');
 const btnRoll = document.querySelector('.btn--roll');
 const btnHold = document.querySelector('.btn--hold');
+const exit = document.querySelector('.exit');
 
 let playing = true;
 
@@ -110,3 +111,7 @@ document
       window.location.href = '../CAL/cal.html';
     }, 500);
   });
+
+exit.addEventListener('click', function () {
+  window.close();
+});

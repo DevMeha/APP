@@ -7,6 +7,7 @@ const inputText = document.querySelector(".input-text");
 const clear = document.querySelector(".clear");
 const del = document.querySelector(".del");
 const next = document.querySelector(".next-btn");
+const exit = document.querySelector(".exit");
 
 let previousoperand = "";
 let currentOperand = "";
