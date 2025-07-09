@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-translate="app_title">Trading Diary</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+
+  <body>
+    <!-- Usunięto modal logowania/rejestracji -->
+    <!-- Usunięto wszelkie odwołania do logowania -->
+    <!-- Aplikacja startuje od razu -->
+    <div class="stars-bg" id="starsBg"></div>
+    <div
+      class="app-container"
+      id="appContainer"
+      style="
+        width: 100vw;
+        max-width: 1800px;
+        min-height: 100vh;
+        margin: 0 auto;
+        border-radius: 28px;
+        display: none;
+      "
+    >
+      <!-- Header -->
+      <header
+        class="header"
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <h1 style="margin: 0">
+          <i class="fas fa-chart-line"></i>
+          <span data-translate="app_title">Trading Diary</span>
+        </h1>
+        <div class="balance-section">
+          <span class="balance-icon">🚀</span>
+          <span class="balance-label" data-translate="balance_label"
+            >Balance:</span
+          >
+          <span class="balance-value animated-number" id="currentBalance"
+            >0.00</span
+          >
+          <span class="balance-arrow" id="balanceArrow">▲</span>
+          <span class="balance-percent" id="balancePercent">+0.00%</span>
+          <span class="balance-currency" id="balanceCurrency">USD</span>
+          <button
+            class="btn btn-secondary"
+            id="editBalanceBtn"
+            style="margin-left: 16px"
+          >
+            <i class="fas fa-pen"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-tabs">
+        <button class="tab-btn active" data-tab="trades">
+          <i class="fas fa-exchange-alt"></i>
+          <span data-translate="nav_trades">Trades</span>
+        </button>
+        <button class="tab-btn" data-tab="charts">
+          <i class="fas fa-chart-area"></i>
+          <span data-translate="nav_charts">Charts</span>
+        </button>
+        <button class="tab-btn" data-tab="calculator">
+          <i class="fas fa-calculator"></i>
+          <span data-translate="nav_calculator">Calculator</span>
+        </button>
+        <button class="tab-btn" data-tab="calendar">
+          <i class="fas fa-calendar"></i>
+          <span data-translate="nav_calendar">Calendar</span>
+        </button>
+        <button class="tab-btn" data-tab="settings">
+          <i class="fas fa-cog"></i>
+          <span data-translate="nav_settings">Settings</span>
+        </button>
+        <button class="tab-btn" data-tab="alerts" id="exitTabBtn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Wyjście</span>
+        </button>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Trades Tab -->
+        <div class="tab-content active" id="trades">
+          <div class="trades-header">
+            <h2 data-translate="trades_header">Trade History</h2>
+            <button class="btn btn-primary" id="addTradeBtn">
+              <i class="fas fa-plus"></i>
+              <span data-translate="add_trade">Add Trade</span>
+            </button>
+          </div>
+
+          <div class="trades-summary">
+            <div class="summary-card">
+              <h3 data-translate="total_profit">Total Profit</h3>
+              <span class="profit-amount" id="totalProfit">0.00 USD</span>
+            </div>
+            <div class="summary-card">
+              <h3 data-translate="trades_count">Trades Count</h3>
+              <span class="trades-count" id="tradesCount">0</span>
+            </div>
+            <div class="summary-card">
+              <h3 data-translate="win_rate">Win Rate</h3>
+              <span class="win-rate" id="winRate">0%</span>
+            </div>
+          </div>
+
+          <div class="trades-list" id="tradesList">
+            <!-- Trades will be added here dynamically -->
+          </div>
+        </div>
+
+        <!-- Charts Tab -->
+        <div class="tab-content" id="charts">
+          <div class="charts-header">
+            <h2 data-translate="charts_header">Capital Analysis</h2>
+            <div class="chart-controls">
+              <select id="chartPeriod">
+                <option value="all">All</option>
+                <option value="day" selected>Day</option>
+                <option value="week">Week</option>
+                <option value="month">Month</option>
+                <option value="year">Year</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <canvas id="balanceChart"></canvas>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h3 data-translate="avg_balance">Average Balance</h3>
+              <span id="avgBalance">0.00 USD</span>
+            </div>
+            <div class="stat-card">
+              <h3 data-translate="max_balance">Maximum Balance</h3>
+              <span id="maxBalance">0.00 USD</span>
+            </div>
+            <div class="stat-card">
+              <h3 data-translate="capital_growth">Capital Growth</h3>
+              <span id="capitalGrowth">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculator Tab -->
+        <div class="tab-content" id="calculator">
+          <div class="calculator-header">
+            <h2 data-translate="calculator_header">Risk Calculator</h2>
+          </div>
+
+          <div class="calculator-grid">
+            <!-- Risk Calculator -->
+            <div class="calculator-section">
+              <h3><i class="fas fa-shield-alt"></i> Kalkulator Ryzyka</h3>
+              <div class="form-group">
+                <label for="riskPercentage">Procent Ryzyka (%):</label>
+                <input
+                  type="number"
+                  id="riskPercentage"
+                  value="1"
+                  min="0.1"
+                  max="10"
+                  step="0.1"
+                />
+              </div>
+              <div class="form-group">
+                <label for="stopLossPercentage">Stop Loss (%):</label>
+                <input
+                  type="number"
+                  id="stopLossPercentage"
+                  value="2"
+                  min="0.1"
+                  max="20"
+                  step="0.1"
+                />
+              </div>
+              <div class="risk-results">
+                <div class="risk-item">
+                  <span class="risk-label">Kwota do Ryzykowania:</span>
+                  <span class="risk-value" id="riskAmount">0.00 NOK</span>
+                </div>
+                <div class="risk-item">
+                  <span class="risk-label">Wielkość Pozycji:</span>
+                  <span class="risk-value" id="positionSize">0.00 NOK</span>
+                </div>
+                <div class="risk-item">
+                  <span class="risk-label">Maksymalna Strata:</span>
+                  <span class="risk-value" id="maxLoss">0.00 NOK</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Drawdown Calculator -->
+            <div class="calculator-section">
+              <h3>
+                <i class="fas fa-chart-line-down"></i> Kalkulator Drawdown
+              </h3>
+              <div class="form-group">
+                <label for="consecutiveLosses"
+                  >Liczba Przegranych z Rzędu:</label
+                >
+                <input
+                  type="number"
+                  id="consecutiveLosses"
+                  value="5"
+                  min="1"
+                  max="50"
+                />
+              </div>
+              <div class="form-group">
+                <label for="lossPerTrade">Strata na Transakcję (%):</label>
+                <input
+                  type="number"
+                  id="lossPerTrade"
+                  value="2"
+                  min="0.1"
+                  max="10"
+                  step="0.1"
+                />
+              </div>
+              <div class="drawdown-results">
+                <div class="drawdown-item">
+                  <span class="drawdown-label">Strata Po Przegranych:</span>
+                  <span class="drawdown-value" id="totalLoss">0%</span>
+                </div>
+                <div class="drawdown-item">
+                  <span class="drawdown-label">Pozostały Kapitał:</span>
+                  <span class="drawdown-value" id="remainingCapital"
+                    >0.00 NOK</span
+                  >
+                </div>
+                <div class="drawdown-item">
+                  <span class="drawdown-label">Dni do Bankructwa:</span>
+                  <span class="drawdown-value" id="daysToBankruptcy">∞</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Position Sizing -->
+            <div class="calculator-section">
+              <h3><i class="fas fa-balance-scale"></i> Wielkość Pozycji</h3>
+              <div class="form-group">
+                <label for="targetProfit">Cel Profit (%):</label>
+                <input
+                  type="number"
+                  id="targetProfit"
+                  value="5"
+                  min="0.1"
+                  max="50"
+                  step="0.1"
+                />
+              </div>
+              <div class="form-group">
+                <label for="winRate">Win Rate (%):</label>
+                <input
+                  type="number"
+                  id="winRateInput"
+                  value="60"
+                  min="1"
+                  max="100"
+                />
+              </div>
+              <div class="position-results">
+                <div class="position-item">
+                  <span class="position-label">Optymalna Wielkość:</span>
+                  <span class="position-value" id="optimalSize">0.00 NOK</span>
+                </div>
+                <div class="position-item">
+                  <span class="position-label">Oczekiwany Profit:</span>
+                  <span class="position-value" id="expectedProfit"
+                    >0.00 NOK</span
+                  >
+                </div>
+                <div class="position-item">
+                  <span class="position-label">Ryzyko/Reward:</span>
+                  <span class="position-value" id="riskReward">0:0</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- TD365 Risk Calculator -->
+            <div class="calculator-section">
+              <h3><i class="fas fa-calculator"></i> TD365 Risk Calculator</h3>
+              <div class="form-group">
+                <label for="td365Deposit">Depozyt (NOK):</label>
+                <input
+                  type="number"
+                  id="td365Deposit"
+                  placeholder="Wprowadź depozyt"
+                />
+              </div>
+              <div class="form-group">
+                <label for="td365Risk">Ryzyko na transakcję (%):</label>
+                <input
+                  type="number"
+                  id="td365Risk"
+                  step="0.1"
+                  placeholder="np. 2"
+                />
+              </div>
+              <div class="form-group">
+                <label for="td365StopLoss">Stop Loss (punkty):</label>
+                <input type="number" id="td365StopLoss" placeholder="np. 15" />
+              </div>
+              <div class="form-group">
+                <label for="td365Instrument">Instrument:</label>
+                <select id="td365Instrument">
+                  <option value="1">US2000 / Russell</option>
+                  <option value="1">NAS100</option>
+                  <option value="1">DAX</option>
+                  <option value="1">DJ30</option>
+                  <option value="1">FTSE / UK100</option>
+                  <option value="1">GOLD</option>
+                  <option value="1">GBP/USD</option>
+                  <option value="1">EUR/USD</option>
+                  <option value="1">Crude Oil</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" id="td365CalcBtn">
+                Oblicz wielkość pozycji
+              </button>
+              <div class="result" id="td365Result"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calendar Tab -->
+        <div class="tab-content" id="calendar">
+          <div class="calendar-header">
+            <h2 data-translate="calendar_header">Trading Calendar</h2>
+            <div class="calendar-controls">
+              <button class="btn btn-secondary" id="prevMonthBtn">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <h3 id="currentMonth" data-translate="current_month">
+                January 2024
+              </h3>
+              <button class="btn btn-secondary" id="nextMonthBtn">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="calendar-container">
+            <div class="calendar-weekdays">
+              <div class="weekday" data-translate="monday">Mon</div>
+              <div class="weekday" data-translate="tuesday">Tue</div>
+              <div class="weekday" data-translate="wednesday">Wed</div>
+              <div class="weekday" data-translate="thursday">Thu</div>
+              <div class="weekday" data-translate="friday">Fri</div>
+              <div class="weekday" data-translate="saturday">Sat</div>
+              <div class="weekday" data-translate="sunday">Sun</div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+              <!-- Calendar days will be generated here -->
+            </div>
+          </div>
+
+          <div class="calendar-summary">
+            <div class="summary-card">
+              <h3 data-translate="monthly_profit">Monthly Profit</h3>
+              <span class="profit-amount" id="monthlyProfit">0.00 USD</span>
+            </div>
+            <div class="summary-card">
+              <h3 data-translate="trading_days">Trading Days</h3>
+              <span class="trading-days" id="tradingDays">0</span>
+            </div>
+            <div class="summary-card">
+              <h3 data-translate="winning_days">Winning Days</h3>
+              <span class="winning-days" id="winningDays">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerts Tab -->
+        <div class="tab-content" id="alerts">
+          <div class="alerts-header">
+            <h2 data-translate="alerts_header">Alerts</h2>
+            <button class="btn btn-primary" id="addAlertBtn">
+              <i class="fas fa-plus"></i>
+              <span data-translate="add_alert">Add Alert</span>
+            </button>
+          </div>
+          <div class="alerts-list" id="alertsList">
+            <!-- Alerts will be added here dynamically -->
+          </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div class="tab-content" id="settings">
+          <div class="settings-header">
+            <h2 data-translate="settings_header">Application Settings</h2>
+          </div>
+
+          <div class="settings-grid">
+            <!-- Profile Section -->
+            <div class="settings-section">
+              <h3>
+                <i class="fas fa-user"></i>
+                <span data-translate="profile">Profile</span>
+              </h3>
+              <div id="profileInfo">
+                <p>
+                  <b data-translate="profile_email">E-mail:</b>
+                  <span id="profileEmail"></span>
+                </p>
+                <p>
+                  <b data-translate="profile_firstname">First Name:</b>
+                  <span id="profileFirstName"></span>
+                </p>
+                <p>
+                  <b data-translate="profile_lastname">Last Name:</b>
+                  <span id="profileLastName"></span>
+                </p>
+              </div>
+              <button class="btn btn-danger" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span data-translate="logout">Logout</span>
+              </button>
+            </div>
+            <!-- Currency Settings -->
+            <div class="settings-section">
+              <h3>
+                <i class="fas fa-money-bill-wave"></i>
+                <span data-translate="currency_settings"
+                  >Currency Settings</span
+                >
+              </h3>
+              <div class="form-group">
+                <label for="currencySelect" data-translate="currency"
+                  >Currency:</label
+                >
+                <select id="currencySelect" class="currency-select">
+                  <option value="NOK">NOK - Norwegian Krone</option>
+                  <option value="PLN">PLN - Polish Złoty</option>
+                  <option value="EUR">EUR - Euro</option>
+                  <option value="USD">USD - US Dollar (default)</option>
+                  <option value="USDT">USDT - Tether</option>
+                  <option value="BTC">BTC - Bitcoin</option>
+                  <option value="ETH">ETH - Ethereum</option>
+                  <option value="GBP">GBP - British Pound</option>
+                  <option value="CHF">CHF - Swiss Franc</option>
+                  <option value="JPY">JPY - Japanese Yen</option>
+                </select>
+              </div>
+              <div class="currency-info">
+                <div class="currency-symbol" id="currencySymbol">USD</div>
+                <div class="currency-name" id="currencyName">US Dollar</div>
+              </div>
+              <button class="btn btn-primary" id="saveCurrencyBtn">
+                <i class="fas fa-save"></i>
+                <span data-translate="save_currency">Save Currency</span>
+              </button>
+            </div>
+
+            <!-- Data Management -->
+            <div class="settings-section">
+              <h3>
+                <i class="fas fa-database"></i>
+                <span data-translate="data_management">Data Management</span>
+              </h3>
+              <div class="data-actions">
+                <button class="btn btn-secondary" id="exportDataBtn">
+                  <i class="fas fa-download"></i>
+                  <span data-translate="export_data">Export Data</span>
+                </button>
+                <button class="btn btn-secondary" id="importDataBtn">
+                  <i class="fas fa-upload"></i>
+                  <span data-translate="import_data">Import Data</span>
+                </button>
+                <input
+                  type="file"
+                  id="importFileInput"
+                  accept=".json"
+                  style="display: none"
+                />
+                <button class="btn btn-danger" id="clearDataBtn">
+                  <i class="fas fa-trash"></i>
+                  <span data-translate="clear_data">Clear All Data</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Language Settings -->
+            <div class="settings-section">
+              <h3>
+                <i class="fas fa-globe"></i>
+                <span data-translate="language_settings"
+                  >Language Settings</span
+                >
+              </h3>
+              <div class="form-group">
+                <label for="languageSelect" data-translate="language"
+                  >Language:</label
+                >
+                <select id="languageSelect" class="language-select">
+                  <option value="en" selected>English</option>
+                  <option value="pl">Polski</option>
+                </select>
+              </div>
+              <div class="language-info">
+                <div class="language-name" id="languageName">English</div>
+                <div class="language-description" id="languageDescription">
+                  Default language
+                </div>
+              </div>
+              <button class="btn btn-primary" id="saveLanguageBtn">
+                <i class="fas fa-save"></i>
+                <span data-translate="save_language">Save Language</span>
+              </button>
+            </div>
+
+            <!-- Backup Settings -->
+            <div class="settings-section">
+              <h3>
+                <i class="fas fa-cloud"></i>
+                <span data-translate="backup_settings">Backup Settings</span>
+              </h3>
+              <button class="btn btn-primary" id="saveBackupBtn">
+                <i class="fas fa-save"></i>
+                <span data-translate="save_backup">Save Backup</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Add Trade Modal -->
+    <div class="modal" id="tradeModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 data-translate="add_trade">Add Trade</h3>
+          <button class="close-btn" id="closeTradeModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="tradeForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="tradeSymbol" data-translate="trade_symbol"
+                  >Symbol:</label
+                >
+                <input
+                  type="text"
+                  id="tradeSymbol"
+                  required
+                  data-translate-placeholder="trade_symbol_placeholder"
+                  placeholder=""
+                  value=""
+                />
+              </div>
+              <div class="form-group">
+                <label for="tradeType" data-translate="trade_type">Type:</label>
+                <select id="tradeType" required>
+                  <option value="buy" data-translate="trade_type_buy">
+                    Buy
+                  </option>
+                  <option value="sell" data-translate="trade_type_sell">
+                    Sell
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="tradeSize" data-translate="trade_size_label"
+                  >Position Size:</label
+                >
+                <div class="size-input-group">
+                  <input
+                    type="number"
+                    id="tradeSize"
+                    required
+                    data-translate-placeholder="trade_size_placeholder"
+                    placeholder=""
+                    min="0.01"
+                    step="0.01"
+                    value=""
+                  />
+                  <select id="tradeSizeType" required>
+                    <option value="lot" data-translate="size_lot">Lot</option>
+                    <option value="mini" data-translate="size_mini">
+                      Mini Lot
+                    </option>
+                    <option value="micro" data-translate="size_micro">
+                      Micro Lot
+                    </option>
+                    <option value="nano" data-translate="size_nano">
+                      Nano Lot
+                    </option>
+                    <option value="size" data-translate="size_size">
+                      Size
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="tradeProfit" data-translate="trade_profit"
+                  >Profit/Loss:</label
+                >
+                <input
+                  type="number"
+                  id="tradeProfit"
+                  required
+                  data-translate-placeholder="trade_profit_placeholder"
+                  placeholder="0.00"
+                  step="0.01"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="tradeDate" data-translate="trade_date">Date:</label>
+              <input type="datetime-local" id="tradeDate" required />
+            </div>
+            <div class="form-group">
+              <label for="tradeNotes" data-translate="trade_notes"
+                >Notes:</label
+              >
+              <textarea
+                id="tradeNotes"
+                data-translate-placeholder="trade_notes_placeholder"
+                placeholder="Trade description..."
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="tradeImage" data-translate="trade_image"
+                >Image:</label
+              >
+              <div class="file-input-wrapper">
+                <input
+                  type="file"
+                  id="tradeImage"
+                  accept="image/*"
+                  class="file-input"
+                />
+                <label for="tradeImage" class="file-input-label">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <span class="file-input-text" data-translate="select_image"
+                    >Select Image</span
+                  >
+                  <span class="file-input-hint" data-translate="drag_drop_hint"
+                    >or drag and drop here</span
+                  >
+                </label>
+                <div class="file-preview" id="filePreview"></div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <span data-translate="save_trade">Save Trade</span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancelTradeBtn"
+              >
+                <span data-translate="cancel">Cancel</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calendar Entry Modal -->
+    <div class="modal" id="calendarEntryModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 data-translate="add_calendar_entry">Add Calendar Entry</h3>
+          <button class="close-btn" id="closeCalendarEntryModal">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="calendarEntryForm">
+            <div class="form-group">
+              <label for="entryDate" data-translate="entry_date">Date:</label>
+              <input type="date" id="entryDate" required />
+            </div>
+            <div class="form-group">
+              <label for="entryPnL" data-translate="entry_pnl"
+                >Profit/Loss:</label
+              >
+              <input
+                type="number"
+                id="entryPnL"
+                required
+                data-translate-placeholder="entry_pnl_placeholder"
+                placeholder="0.00"
+                step="0.01"
+              />
+            </div>
+            <div class="form-group">
+              <label for="entryType" data-translate="entry_type">Type:</label>
+              <select id="entryType" required>
+                <option value="profit" data-translate="entry_type_profit">
+                  Profit
+                </option>
+                <option value="loss" data-translate="entry_type_loss">
+                  Loss
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="entryNotes" data-translate="entry_notes"
+                >Notes:</label
+              >
+              <textarea
+                id="entryNotes"
+                data-translate-placeholder="entry_notes_placeholder"
+                placeholder="Trading notes for this day..."
+              ></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <span data-translate="save_entry">Save Entry</span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancelCalendarEntryBtn"
+              >
+                <span data-translate="cancel">Cancel</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Balance Modal -->
+    <div class="modal" id="balanceModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 data-translate="edit_balance">Edit Balance</h3>
+          <button class="close-btn" id="closeBalanceModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="balanceForm">
+            <div class="form-group">
+              <label for="newBalance" data-translate="new_balance"
+                >New Balance:</label
+              >
+              <input type="number" id="newBalance" required step="0.01" />
+            </div>
+            <div class="form-group">
+              <label for="balanceOperationType">Typ operacji:</label>
+              <select id="balanceOperationType">
+                <option value="deposit">Wpłata</option>
+                <option value="withdraw">Wypłata</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button
+                class="btn btn-primary"
+                type="submit"
+                id="saveBalanceBtn"
+                data-translate="save_balance"
+              >
+                Save Balance
+              </button>
+              <button
+                class="btn btn-secondary"
+                type="button"
+                id="cancelBalanceBtn"
+                data-translate="cancel"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+      <button
+        class="notification-close"
+        id="notificationCloseBtn"
+        aria-label="Zamknij"
+      >
+        &times;
+      </button>
+      <span id="notificationText"></span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="script.js"></script>
+    <script src="js/utils/td365Calculator.js"></script>
+  </body>
+</html>

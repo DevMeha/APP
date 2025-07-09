@@ -1,0 +1,212 @@
+/* Calculator Styles */
+.calculator-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.calculator-section {
+  background: rgba(30, 34, 70, 0.7) !important;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 #232b5d33;
+  border: 1.5px solid #6a47b8;
+  color: #b6bfff !important;
+  padding: var(--spacing-lg);
+  transition: all var(--transition-fast);
+}
+
+.calculator-section:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.calculator-section h3 {
+  margin: 0 0 var(--spacing-lg) 0;
+  color: #b6bfff !important;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.calculator-section h3 i {
+  color: var(--primary-color);
+  font-size: var(--font-size-md);
+}
+
+/* Risk Calculator Results */
+.risk-results,
+.drawdown-results,
+.position-results {
+  background: rgba(40, 50, 100, 0.85) !important;
+  color: #b6bfff !important;
+  border-radius: 12px;
+  border: 1.5px solid #6a47b8;
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.risk-item,
+.drawdown-item,
+.position-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.risk-item:last-child,
+.drawdown-item:last-child,
+.position-item:last-child {
+  border-bottom: none;
+}
+
+.risk-label,
+.drawdown-label,
+.position-label {
+  color: #8fa0d6 !important;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.risk-value,
+.drawdown-value,
+.position-value {
+  color: #16c784 !important;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+/* Calculator Input Styles */
+.calculator-section .form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.calculator-section .form-group label {
+  font-size: var(--font-size-sm);
+  color: #8fa0d6 !important;
+  margin-bottom: var(--spacing-xs);
+}
+
+.calculator-section .form-group input {
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-sm);
+  color: #b6bfff !important;
+}
+
+/* Special styling for calculator inputs */
+.calculator-section input[type="number"] {
+  text-align: right;
+  font-family: "Courier New", monospace;
+  font-weight: 600;
+}
+
+/* Result highlighting */
+.risk-value.positive,
+.drawdown-value.positive,
+.position-value.positive {
+  color: var(--profit-color);
+}
+
+.risk-value.negative,
+.drawdown-value.negative,
+.position-value.negative {
+  color: #ea3943 !important;
+}
+
+/* Calculator animations */
+.calculator-section {
+  animation: slideInUp var(--transition-normal);
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Calculator */
+@media (max-width: 768px) {
+  .calculator-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .calculator-section {
+    padding: var(--spacing-md);
+  }
+
+  .risk-results,
+  .drawdown-results,
+  .position-results {
+    padding: var(--spacing-sm);
+  }
+
+  .risk-item,
+  .drawdown-item,
+  .position-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  .risk-value,
+  .drawdown-value,
+  .position-value {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .calculator-section h3 {
+    font-size: var(--font-size-md);
+  }
+
+  .calculator-section h3 i {
+    font-size: var(--font-size-sm);
+  }
+
+  .risk-label,
+  .drawdown-label,
+  .position-label,
+  .risk-value,
+  .drawdown-value,
+  .position-value {
+    font-size: var(--font-size-xs);
+  }
+}
+
+.calculator-section input,
+.calculator-section select,
+.calculator-section textarea {
+  background: rgba(40, 50, 100, 0.7) !important;
+  color: #b6bfff !important;
+  border: 1.5px solid #6a47b8 !important;
+}
+.calculator-section input::placeholder,
+.calculator-section textarea::placeholder {
+  color: #8fa0d6 !important;
+  opacity: 1;
+}
+
+.calculator-header h2 {
+  color: #b6bfff !important;
+  font-weight: 700;
+  font-size: 2.1rem;
+  text-shadow: 0 2px 12px #232b5d, 0 0px 2px #16c784;
+  letter-spacing: 1px;
+}
+
+.drawdown-value {
+  color: #16c784;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
