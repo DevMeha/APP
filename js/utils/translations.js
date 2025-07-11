@@ -10,6 +10,7 @@ export const translations = {
     nav_charts: "Charts",
     nav_calculator: "Calculator",
     nav_calendar: "Calendar",
+    nav_money: "Money Management",
     nav_alerts: "Alerts",
     nav_settings: "Settings",
 
@@ -132,6 +133,7 @@ export const translations = {
 
     // Settings Tab
     settings_header: "Application Settings",
+    account: "Account",
     currency_settings: "Currency Settings",
     currency: "Currency:",
     currency_info: "Currency Info",
@@ -180,6 +182,7 @@ export const translations = {
     save_balance: "Save Balance",
 
     // Notifications
+    logout_success: "Logged out successfully",
     trade_added: "Trade added successfully",
     trade_deleted: "Trade deleted",
     balance_updated: "Balance updated",
@@ -243,6 +246,57 @@ export const translations = {
     // Missing translations
     save_currency: "Save Currency",
     sample_data_generated: "Sample data generated",
+
+    // Money Management
+    money_header: "Money Management",
+    add_expense: "Add Expense",
+    total_income: "Total Income",
+    total_expenses: "Total Expenses",
+    net_balance: "Net Balance",
+    savings_rate: "Savings Rate",
+    expense_chart: "Expense Breakdown",
+    income_chart: "Income vs Expenses",
+    trend_chart: "Monthly Trends",
+    category_chart: "Category Analysis",
+    categories_header: "Expense Categories",
+    add_category: "Add Category",
+    recent_transactions: "Recent Transactions",
+    budget_planning: "Budget Planning",
+    monthly_budget: "Monthly Budget",
+    set_budget: "Set Budget",
+    savings_goal: "Savings Goal",
+    set_goal: "Set Goal",
+    expense_type: "Type",
+    expense: "Expense",
+    income: "Income",
+    expense_category: "Category",
+    category_food: "Food & Dining",
+    category_transport: "Transportation",
+    category_entertainment: "Entertainment",
+    category_shopping: "Shopping",
+    category_bills: "Bills & Utilities",
+    category_health: "Healthcare",
+    category_education: "Education",
+    category_investment: "Investment",
+    category_salary: "Salary",
+    category_other: "Other",
+    expense_amount: "Amount",
+    expense_amount_placeholder: "0.00",
+    expense_date: "Date",
+    expense_description: "Description",
+    expense_description_placeholder: "What was this expense for?",
+    expense_payment_method: "Payment Method",
+    payment_cash: "Cash",
+    payment_card: "Card",
+    payment_transfer: "Bank Transfer",
+    payment_crypto: "Cryptocurrency",
+    payment_other: "Other",
+    save_expense: "Save Expense",
+    category_name: "Category Name",
+    category_name_placeholder: "Enter category name",
+    category_icon: "Icon",
+    category_color: "Color",
+    save_category: "Save Category",
   },
 
   pl: {
@@ -378,6 +432,7 @@ export const translations = {
 
     // Settings Tab
     settings_header: "Ustawienia Aplikacji",
+    account: "Konto",
     currency_settings: "Ustawienia Waluty",
     currency: "Waluta:",
     currency_info: "Informacje o Walucie",
@@ -427,6 +482,7 @@ export const translations = {
     save_balance: "Zapisz Saldo",
 
     // Notifications
+    logout_success: "Wylogowano pomyślnie",
     trade_added: "Transakcja dodana pomyślnie",
     trade_deleted: "Transakcja usunięta",
     balance_updated: "Saldo zaktualizowane",

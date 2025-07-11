@@ -3,6 +3,9 @@ import { TranslationManager } from "./js/utils/translations.js";
 
 // Aplikacja startuje od razu, TradingDiary i CalendarView są inicjalizowane bez sprawdzania użytkownika
 window.addEventListener("DOMContentLoaded", function () {
+  // Pokaż główny kontener aplikacji od razu
+  const appContainer = document.getElementById("appContainer");
+  if (appContainer) appContainer.style.display = "block";
   window.tradingDiary = new TradingDiary();
   window.calendarView = new CalendarView(window.tradingDiary);
 });
@@ -208,6 +211,12 @@ class TradingDiary {
     if (importFileInput)
       importFileInput.addEventListener("change", (e) => this.importData(e));
 
+    // Logout functionality
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => this.logout());
+    }
+
     // Currency settings
     const saveCurrencyBtn = document.getElementById("saveCurrencyBtn");
     if (saveCurrencyBtn) {
@@ -218,7 +227,14 @@ class TradingDiary {
           localStorage.setItem("currency", currency);
           this.updateUI();
           this.updateBalanceModalCurrency();
-          if (this.chart) this.updateChart();
+          if (this.chart) {
+            this.updateChartCurrency();
+            this.updateChart();
+          }
+          this.updateCalculator();
+          if (window.calendarView) {
+            window.calendarView.renderCalendar();
+          }
           this.showNotification(
             this.translationManager.t("currency_saved"),
             "success"
@@ -658,6 +674,7 @@ class TradingDiary {
 
   setupChart() {
     const ctx = document.getElementById("balanceChart").getContext("2d");
+    const currency = (localStorage.getItem("currency") || "USD").toUpperCase();
     this.chart = new Chart(ctx, {
       type: "line",
       data: {
@@ -666,7 +683,7 @@ class TradingDiary {
           {
             label: `${this.translationManager
               .t("balance_label")
-              .replace(":", "")} (NOK)`,
+              .replace(":", "")} (${currency})`,
             data: [],
             borderColor: "#667eea",
             backgroundColor: "rgba(102, 126, 234, 0.1)",
@@ -704,7 +721,9 @@ class TradingDiary {
               label: function (context) {
                 return `${this.translationManager
                   .t("balance_label")
-                  .replace(":", "")}: ${context.parsed.y.toFixed(2)} NOK`;
+                  .replace(":", "")}: ${context.parsed.y.toFixed(
+                  2
+                )} ${currency}`;
               }.bind(this),
             },
           },
@@ -717,7 +736,7 @@ class TradingDiary {
             },
             ticks: {
               callback: function (value) {
-                return value.toFixed(0) + " NOK";
+                return value.toFixed(0) + " " + currency;
               },
             },
           },
@@ -833,6 +852,30 @@ class TradingDiary {
     this.updateStats(filteredData);
   }
 
+  updateChartCurrency() {
+    if (!this.chart) return;
+    const currency = (localStorage.getItem("currency") || "USD").toUpperCase();
+
+    // Update chart label
+    this.chart.data.datasets[0].label = `${this.translationManager
+      .t("balance_label")
+      .replace(":", "")} (${currency})`;
+
+    // Update tooltip callback
+    this.chart.options.plugins.tooltip.callbacks.label = function (context) {
+      return `${this.translationManager
+        .t("balance_label")
+        .replace(":", "")}: ${context.parsed.y.toFixed(2)} ${currency}`;
+    }.bind(this);
+
+    // Update Y-axis ticks
+    this.chart.options.scales.y.ticks.callback = function (value) {
+      return value.toFixed(0) + " " + currency;
+    };
+
+    this.chart.update();
+  }
+
   updateStats(data) {
     if (data.length === 0) return;
 
@@ -847,12 +890,13 @@ class TradingDiary {
         ? ((finalBalance - initialBalance) / initialBalance) * 100
         : 0;
 
+    const currency = (localStorage.getItem("currency") || "USD").toUpperCase();
     document.getElementById("avgBalance").textContent = `${avgBalance.toFixed(
       2
-    )} NOK`;
+    )} ${currency}`;
     document.getElementById("maxBalance").textContent = `${maxBalance.toFixed(
       2
-    )} NOK`;
+    )} ${currency}`;
     document.getElementById("capitalGrowth").textContent = `${growth.toFixed(
       2
     )}%`;
@@ -894,15 +938,16 @@ class TradingDiary {
     const positionSize = (riskAmount * 100) / stopLossPercentage;
     const maxLoss = (positionSize * stopLossPercentage) / 100;
 
+    const currency = (localStorage.getItem("currency") || "USD").toUpperCase();
     document.getElementById("riskAmount").textContent = `${riskAmount.toFixed(
       2
-    )} NOK`;
+    )} ${currency}`;
     document.getElementById(
       "positionSize"
-    ).textContent = `${positionSize.toFixed(2)} NOK`;
+    ).textContent = `${positionSize.toFixed(2)} ${currency}`;
     document.getElementById("maxLoss").textContent = `${maxLoss.toFixed(
       2
-    )} NOK`;
+    )} ${currency}`;
   }
 
   calculateDrawdown() {
@@ -928,9 +973,10 @@ class TradingDiary {
     document.getElementById(
       "totalLoss"
     ).textContent = `${totalLossPercentage.toFixed(2)}%`;
+    const currency = (localStorage.getItem("currency") || "USD").toUpperCase();
     document.getElementById(
       "remainingCapital"
-    ).textContent = `${remainingCapital.toFixed(2)} NOK`;
+    ).textContent = `${remainingCapital.toFixed(2)} ${currency}`;
     document.getElementById("daysToBankruptcy").textContent =
       daysToBankruptcy > 1000 ? "∞" : `${Math.ceil(daysToBankruptcy)} dni`;
   }
@@ -954,12 +1000,13 @@ class TradingDiary {
     const expectedProfit = optimalSize * (winRate / 100) * (targetProfit / 100);
     const riskRewardRatio = targetProfit / 2; // Assuming 2% stop loss
 
+    const currency = (localStorage.getItem("currency") || "USD").toUpperCase();
     document.getElementById("optimalSize").textContent = `${optimalSize.toFixed(
       2
-    )} NOK`;
+    )} ${currency}`;
     document.getElementById(
       "expectedProfit"
-    ).textContent = `${expectedProfit.toFixed(2)} NOK`;
+    ).textContent = `${expectedProfit.toFixed(2)} ${currency}`;
     document.getElementById(
       "riskReward"
     ).textContent = `1:${riskRewardRatio.toFixed(1)}`;
@@ -1376,6 +1423,35 @@ class TradingDiary {
     currencyEls.forEach((el) => (el.textContent = currency));
   }
 
+  logout() {
+    // Clear user data
+    this.currentUser = null;
+    this.trades = [];
+    this.alerts = [];
+    this.balanceHistory = [];
+    this.initialBalance = 0;
+    this.currentBalance = 0;
+
+    // Clear localStorage
+    localStorage.removeItem("trades");
+    localStorage.removeItem("alerts");
+    localStorage.removeItem("balanceHistory");
+    localStorage.removeItem("initialBalance");
+    localStorage.removeItem("currentUser");
+
+    // Show login modal
+    if (window.loginManager) {
+      window.loginManager.showLoginModal();
+    }
+
+    // Update UI
+    this.updateUI();
+    this.showNotification(
+      this.translationManager.t("logout_success"),
+      "success"
+    );
+  }
+
   setupImageModal() {
     // Dodaj modal do body jeśli nie istnieje
     if (!document.getElementById("imageModal")) {
@@ -1548,11 +1624,14 @@ class CalendarView {
             const bgColor = profit >= 0 ? "#16c784" : "#ea3943";
             const color = "#fff";
             const profitClass = profit >= 0 ? "profit" : "loss";
+            const currency = (
+              localStorage.getItem("currency") || "USD"
+            ).toUpperCase();
             summary = `<div class='calendar-cell-content'><div class='calendar-profit ${profitClass}' style='font-weight:bold;'>${
               profit >= 0 ? "+" : ""
             }${profit.toFixed(
               2
-            )} USD</div><div class='calendar-trades'>${tradeCount} trades</div></div>`;
+            )} ${currency}</div><div class='calendar-trades'>${tradeCount} trades</div></div>`;
             html += `<div class='${cellClass}' style='background:${bgColor};'>
               <div class='calendar-day' style='color:${color};'>${dayNum}</div>
               ${summary}
@@ -1585,9 +1664,10 @@ class CalendarView {
       if (trades.length > 0) tradingDays++;
       if (profit > 0) winningDays++;
     });
+    const currency = (localStorage.getItem("currency") || "USD").toUpperCase();
     document.getElementById("monthlyProfit").textContent = `${
       monthlyProfit >= 0 ? "+" : "-"
-    }$${Math.abs(monthlyProfit).toFixed(2)} USD`;
+    }${Math.abs(monthlyProfit).toFixed(2)} ${currency}`;
     document.getElementById("monthlyProfit").style.color =
       monthlyProfit >= 0 ? "#16c784" : "#ea3943";
     document.getElementById("tradingDays").textContent = tradingDays;

@@ -81,6 +81,10 @@
           <i class="fas fa-calendar"></i>
           <span data-translate="nav_calendar">Calendar</span>
         </button>
+        <button class="tab-btn" data-tab="money">
+          <i class="fas fa-wallet"></i>
+          <span data-translate="nav_money">Money Management</span>
+        </button>
         <button class="tab-btn" data-tab="settings">
           <i class="fas fa-cog"></i>
           <span data-translate="nav_settings">Settings</span>
@@ -388,6 +392,122 @@
           </div>
         </div>
 
+        <!-- Money Management Tab -->
+        <div class="tab-content" id="money">
+          <div class="money-header">
+            <h2 data-translate="money_header">Money Management</h2>
+            <button class="btn btn-primary" id="addExpenseBtn">
+              <i class="fas fa-plus"></i>
+              <span data-translate="add_expense">Add Expense</span>
+            </button>
+          </div>
+
+          <!-- Money Overview -->
+          <div class="money-overview">
+            <div class="overview-card">
+              <h3 data-translate="total_income">Total Income</h3>
+              <span class="income-amount" id="totalIncome">0.00 USD</span>
+            </div>
+            <div class="overview-card">
+              <h3 data-translate="total_expenses">Total Expenses</h3>
+              <span class="expense-amount" id="totalExpenses">0.00 USD</span>
+            </div>
+            <div class="overview-card">
+              <h3 data-translate="net_balance">Net Balance</h3>
+              <span class="balance-amount" id="netBalance">0.00 USD</span>
+            </div>
+            <div class="overview-card">
+              <h3 data-translate="savings_rate">Savings Rate</h3>
+              <span class="savings-rate" id="savingsRate">0%</span>
+            </div>
+          </div>
+
+          <!-- Charts Section -->
+          <div class="money-charts">
+            <div class="chart-row">
+              <div class="chart-container">
+                <h3 data-translate="expense_chart">Expense Breakdown</h3>
+                <canvas id="expenseChart"></canvas>
+              </div>
+              <div class="chart-container">
+                <h3 data-translate="income_chart">Income vs Expenses</h3>
+                <canvas id="incomeExpenseChart"></canvas>
+              </div>
+            </div>
+            <div class="chart-row">
+              <div class="chart-container">
+                <h3 data-translate="trend_chart">Monthly Trends</h3>
+                <canvas id="trendChart"></canvas>
+              </div>
+              <div class="chart-container">
+                <h3 data-translate="category_chart">Category Analysis</h3>
+                <canvas id="categoryChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Categories Management -->
+          <div class="categories-section">
+            <h3 data-translate="categories_header">Expense Categories</h3>
+            <div class="categories-grid" id="categoriesGrid">
+              <!-- Categories will be added here dynamically -->
+            </div>
+            <button class="btn btn-secondary" id="addCategoryBtn">
+              <i class="fas fa-plus"></i>
+              <span data-translate="add_category">Add Category</span>
+            </button>
+          </div>
+
+          <!-- Recent Transactions -->
+          <div class="transactions-section">
+            <h3 data-translate="recent_transactions">Recent Transactions</h3>
+            <div class="transactions-list" id="transactionsList">
+              <!-- Transactions will be added here dynamically -->
+            </div>
+          </div>
+
+          <!-- Budget Planning -->
+          <div class="budget-section">
+            <h3 data-translate="budget_planning">Budget Planning</h3>
+            <div class="budget-grid">
+              <div class="budget-card">
+                <h4 data-translate="monthly_budget">Monthly Budget</h4>
+                <div class="budget-input">
+                  <input type="number" id="monthlyBudget" placeholder="0.00" />
+                  <button class="btn btn-primary" id="setBudgetBtn">
+                    <span data-translate="set_budget">Set Budget</span>
+                  </button>
+                </div>
+                <div class="budget-progress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" id="budgetProgress"></div>
+                  </div>
+                  <span class="progress-text" id="budgetProgressText"
+                    >0% used</span
+                  >
+                </div>
+              </div>
+              <div class="budget-card">
+                <h4 data-translate="savings_goal">Savings Goal</h4>
+                <div class="goal-input">
+                  <input type="number" id="savingsGoal" placeholder="0.00" />
+                  <button class="btn btn-primary" id="setGoalBtn">
+                    <span data-translate="set_goal">Set Goal</span>
+                  </button>
+                </div>
+                <div class="goal-progress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" id="goalProgress"></div>
+                  </div>
+                  <span class="progress-text" id="goalProgressText"
+                    >0% saved</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Alerts Tab -->
         <div class="tab-content" id="alerts">
           <div class="alerts-header">
@@ -409,26 +529,12 @@
           </div>
 
           <div class="settings-grid">
-            <!-- Profile Section -->
+            <!-- Logout Section -->
             <div class="settings-section">
               <h3>
-                <i class="fas fa-user"></i>
-                <span data-translate="profile">Profile</span>
+                <i class="fas fa-sign-out-alt"></i>
+                <span data-translate="account">Account</span>
               </h3>
-              <div id="profileInfo">
-                <p>
-                  <b data-translate="profile_email">E-mail:</b>
-                  <span id="profileEmail"></span>
-                </p>
-                <p>
-                  <b data-translate="profile_firstname">First Name:</b>
-                  <span id="profileFirstName"></span>
-                </p>
-                <p>
-                  <b data-translate="profile_lastname">Last Name:</b>
-                  <span id="profileLastName"></span>
-                </p>
-              </div>
               <button class="btn btn-danger" id="logoutBtn">
                 <i class="fas fa-sign-out-alt"></i>
                 <span data-translate="logout">Logout</span>
@@ -782,6 +888,203 @@
                 data-translate="cancel"
               >
                 Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Expense Modal -->
+    <div class="modal" id="expenseModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 data-translate="add_expense">Add Expense</h3>
+          <button class="close-btn" id="closeExpenseModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="expenseForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="expenseType" data-translate="expense_type"
+                  >Type:</label
+                >
+                <select id="expenseType" required>
+                  <option value="expense" data-translate="expense">
+                    Expense
+                  </option>
+                  <option value="income" data-translate="income">Income</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="expenseCategory" data-translate="expense_category"
+                  >Category:</label
+                >
+                <select id="expenseCategory" required>
+                  <option value="food" data-translate="category_food">
+                    Food & Dining
+                  </option>
+                  <option value="transport" data-translate="category_transport">
+                    Transportation
+                  </option>
+                  <option
+                    value="entertainment"
+                    data-translate="category_entertainment"
+                  >
+                    Entertainment
+                  </option>
+                  <option value="shopping" data-translate="category_shopping">
+                    Shopping
+                  </option>
+                  <option value="bills" data-translate="category_bills">
+                    Bills & Utilities
+                  </option>
+                  <option value="health" data-translate="category_health">
+                    Healthcare
+                  </option>
+                  <option value="education" data-translate="category_education">
+                    Education
+                  </option>
+                  <option
+                    value="investment"
+                    data-translate="category_investment"
+                  >
+                    Investment
+                  </option>
+                  <option value="salary" data-translate="category_salary">
+                    Salary
+                  </option>
+                  <option value="other" data-translate="category_other">
+                    Other
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="expenseAmount" data-translate="expense_amount"
+                  >Amount:</label
+                >
+                <input
+                  type="number"
+                  id="expenseAmount"
+                  required
+                  data-translate-placeholder="expense_amount_placeholder"
+                  placeholder="0.00"
+                  step="0.01"
+                />
+              </div>
+              <div class="form-group">
+                <label for="expenseDate" data-translate="expense_date"
+                  >Date:</label
+                >
+                <input type="date" id="expenseDate" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label
+                for="expenseDescription"
+                data-translate="expense_description"
+                >Description:</label
+              >
+              <input
+                type="text"
+                id="expenseDescription"
+                data-translate-placeholder="expense_description_placeholder"
+                placeholder="What was this expense for?"
+              />
+            </div>
+            <div class="form-group">
+              <label
+                for="expensePaymentMethod"
+                data-translate="expense_payment_method"
+                >Payment Method:</label
+              >
+              <select id="expensePaymentMethod">
+                <option value="cash" data-translate="payment_cash">Cash</option>
+                <option value="card" data-translate="payment_card">Card</option>
+                <option value="transfer" data-translate="payment_transfer">
+                  Bank Transfer
+                </option>
+                <option value="crypto" data-translate="payment_crypto">
+                  Cryptocurrency
+                </option>
+                <option value="other" data-translate="payment_other">
+                  Other
+                </option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <span data-translate="save_expense">Save Expense</span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancelExpenseBtn"
+              >
+                <span data-translate="cancel">Cancel</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div class="modal" id="categoryModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 data-translate="add_category">Add Category</h3>
+          <button class="close-btn" id="closeCategoryModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="categoryForm">
+            <div class="form-group">
+              <label for="categoryName" data-translate="category_name"
+                >Category Name:</label
+              >
+              <input
+                type="text"
+                id="categoryName"
+                required
+                data-translate-placeholder="category_name_placeholder"
+                placeholder="Enter category name"
+              />
+            </div>
+            <div class="form-group">
+              <label for="categoryIcon" data-translate="category_icon"
+                >Icon:</label
+              >
+              <select id="categoryIcon">
+                <option value="fas fa-utensils">🍽️ Food</option>
+                <option value="fas fa-car">🚗 Transport</option>
+                <option value="fas fa-gamepad">🎮 Entertainment</option>
+                <option value="fas fa-shopping-bag">🛍️ Shopping</option>
+                <option value="fas fa-bolt">⚡ Bills</option>
+                <option value="fas fa-heartbeat">❤️ Health</option>
+                <option value="fas fa-graduation-cap">🎓 Education</option>
+                <option value="fas fa-chart-line">📈 Investment</option>
+                <option value="fas fa-money-bill-wave">💰 Salary</option>
+                <option value="fas fa-ellipsis-h">⋯ Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="categoryColor" data-translate="category_color"
+                >Color:</label
+              >
+              <input type="color" id="categoryColor" value="#667eea" />
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <span data-translate="save_category">Save Category</span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancelCategoryBtn"
+              >
+                <span data-translate="cancel">Cancel</span>
               </button>
             </div>
           </form>
